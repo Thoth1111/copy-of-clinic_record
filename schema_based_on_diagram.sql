@@ -31,3 +31,31 @@ CREATE TABLE invoice_items (
     quantity INT,
     total_price DECIMAL
 );
+
+--Alter medical histories table
+ALTER TABLE medical_histories
+ADD CONSTRAINT FK_patients_medical_histories
+FOREIGN KEY (patient_id)
+REFERENCES patients(id);
+
+--Add medical history id column to invoices and set as foreign key
+ALTER TABLE invoices
+ADD COLUMN medical_histories_id INT UNIQUE
+REFERENCES medical_histories(id);
+
+--Add invoice id column and set as foreign key
+ALTER TABLE invoice_items
+ADD COLUMN invoice_id INT
+REFERENCES invoices(id);
+
+--Add treatment id column and set as foreign key
+ALTER TABLE invoice_items
+ADD COLUMN treatment_id INT
+REFERENCES treatments(id);
+
+--create join table from medical histories and treatments table
+CREATE TABLE medical_histories_treatments (
+  medical_histories_id INT REFERENCES medical_histories(id),
+  treatments_id INT REFERENCES treatments(id),
+  PRIMARY KEY (medical_histories_id, treatments_id)
+);
